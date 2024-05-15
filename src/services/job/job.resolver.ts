@@ -14,6 +14,6 @@ export class JobResolver {
 
   @Query(() => [Job])
   async users() {
-    return this.jobService.find();
+    return this.jobService.findAll();
   }
 }

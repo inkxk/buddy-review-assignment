@@ -4,10 +4,11 @@ import { JobService } from "./job.service";
 import { DatabaseModule } from "../../database/database.module";
 import { jobProviders } from "./job.providers";
 import { JobController } from "./job.controller";
+import { userProviders } from "../user/user.providers";
 
 @Module({
   imports: [DatabaseModule],
-  providers: [JobResolver, JobService, ...jobProviders],
+  providers: [JobResolver, JobService, ...jobProviders, ...userProviders],
   exports: [JobService],
   controllers: [JobController],
 })

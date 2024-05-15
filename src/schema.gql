@@ -3,7 +3,6 @@
 # ------------------------------------------------------
 
 type User {
-  id: String!
   name: String!
   email: String!
   password: String!
@@ -16,7 +15,6 @@ type Applicant {
 }
 
 type Job {
-  id: String!
   title: String!
   description: String!
   company_id: String!

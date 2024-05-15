@@ -4,7 +4,7 @@ import { Document } from "mongoose";
 
 const applicantSchema = new mongoose.Schema({
   applicant_id: { type: String, required: true },
-  application_status: { type: String, required: true },
+  application_status: { type: String },
 });
 
 export const JobSchema = new mongoose.Schema({
@@ -12,7 +12,7 @@ export const JobSchema = new mongoose.Schema({
   description: { type: String, required: false },
   company_id: { type: String, required: true },
   applicants: { type: [applicantSchema], required: true },
-  status: { type: String, required: true },
+  status: { type: String, required: true, default: "active" },
 });
 
 @ObjectType()

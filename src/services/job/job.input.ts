@@ -57,3 +57,16 @@ export class UpdateApplicantStatusInput {
   @IsString()
   application_status: string;
 }
+
+@InputType()
+export class ApplyJobInput {
+  @Field()
+  @IsNotEmpty()
+  @IsString()
+  job_id: string;
+
+  @Field()
+  @IsNotEmpty()
+  @IsString()
+  applicant_id: string;
+}
