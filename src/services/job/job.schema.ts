@@ -12,7 +12,7 @@ export const JobSchema = new mongoose.Schema({
   description: { type: String, required: false },
   company_id: { type: String, required: true },
   applicants: { type: [applicantSchema], required: true },
-  status: { type: String, required: true, default: "active" },
+  is_deleted: { type: Boolean, default: false }
 });
 
 @ObjectType()
@@ -39,5 +39,5 @@ export class Job extends Document {
   applicants: [Applicant];
 
   @Field()
-  status: string;
+  is_deleted: boolean;
 }

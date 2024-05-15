@@ -19,7 +19,7 @@ type Job {
   description: String!
   company_id: String!
   applicants: [Applicant!]!
-  status: String!
+  is_deleted: Boolean!
 }
 
 type Query {
