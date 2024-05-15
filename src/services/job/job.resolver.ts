@@ -12,6 +12,16 @@ export class JobResolver {
     return this.jobService.registerJob(input);
   }
 
+  @Mutation(() => Job)
+  async applyJob(@Args("input") input: RegisterJobInput) {
+    return this.jobService.applyJob(input);
+  }
+
+  @Mutation(() => Job)
+  async closeJob(@Args("input") input: RegisterJobInput) {
+    return this.jobService.closeJob(input);
+  }
+
   @Query(() => [Job])
   async users() {
     return this.jobService.findAll();

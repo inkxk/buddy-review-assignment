@@ -32,18 +32,13 @@ export class QueryJobInput {
 }
 
 @InputType()
-export class UpdateJobStatusInput {
+export class CloseJobInput {
   @Field()
   @IsNotEmpty()
   @IsString()
   @MinLength(24)
   @MaxLength(24)
   job_id: string;
-
-  @Field()
-  @IsNotEmpty()
-  @IsString()
-  job_status: string;
 }
 
 @InputType()

@@ -1,4 +1,4 @@
-import { Model, CreateQuery } from "mongoose";
+import { Model, CreateQuery, UpdateQuery } from "mongoose";
 import { Injectable, Inject, NotFoundException, ConflictException } from "@nestjs/common";
 import { Job } from "./job.schema";
 import { User } from "../user/user.schema";
@@ -24,11 +24,11 @@ export class JobService {
     return this.jobModel.create(input);
   }
 
-  async applyJob(input: CreateQuery<ApplyJobInput>): Promise<Job> {
+  async applyJob(input: UpdateQuery<ApplyJobInput>): Promise<Job> {
     const applicantExists = await this.userModel
       .findOne({ _id: input.applicant_id, type: "applicant" })
       .exec();
-    const jobExists = await this.jobModel.findOne({ _id: input.job_id }).exec();
+    const jobExists = await this.jobModel.findOne({ _id: input.job_id, is_deleted: false }).exec();
 
     if (!applicantExists || !jobExists) {
       throw new NotFoundException("Applicant or Job not found");
@@ -39,6 +39,7 @@ export class JobService {
       .findOne({
         _id: input.job_id,
         applicants: { $elemMatch: { applicant_id: input.applicant_id } },
+        is_deleted: false
       })
       .exec();
 
@@ -50,6 +51,22 @@ export class JobService {
       input.job_id,
       {
         $push: { applicants: { applicant_id: input.applicant_id } },
+      },
+      { new: true },
+    );
+  }
+
+  async closeJob(input: UpdateQuery<RegisterJobInput>): Promise<Job> {
+    const jobExists = await this.jobModel.findOne({ _id: input.job_id, is_deleted: false }).exec();
+
+    if (!jobExists) {
+      throw new NotFoundException("Job not found");
+    }
+
+    return this.jobModel.findByIdAndUpdate(
+      input.job_id,
+      {
+        is_deleted: true
       },
       { new: true },
     );

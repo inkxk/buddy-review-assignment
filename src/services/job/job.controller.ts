@@ -1,5 +1,5 @@
 import { Body, Controller, Put, Post } from "@nestjs/common";
-import { RegisterJobInput, ApplyJobInput } from "./job.input";
+import { RegisterJobInput, ApplyJobInput, CloseJobInput } from "./job.input";
 import { JobService } from "./job.service";
 
 @Controller("/job")
@@ -8,13 +8,19 @@ export class JobController {
 
   @Post("/register")
   async registerJob(@Body() data: RegisterJobInput) {
-    const user = await this.jobService.registerJob(data);
-    return { user };
+    const job = await this.jobService.registerJob(data);
+    return { job };
   }
 
   @Put("/apply")
   async applyJob(@Body() data: ApplyJobInput) {
-    const user = await this.jobService.applyJob(data);
-    return { user };
+    const job = await this.jobService.applyJob(data);
+    return { job };
+  }
+
+  @Put("/close")
+  async closeJob(@Body() data: CloseJobInput) {
+    const job = await this.jobService.closeJob(data);
+    return { job };
   }
 }
