@@ -1,5 +1,5 @@
-import { Model, FilterQuery, CreateQuery } from "mongoose";
-import { Injectable, Inject } from "@nestjs/common";
+import { Model, CreateQuery } from "mongoose";
+import { Injectable, Inject, NotFoundException } from "@nestjs/common";
 import { Job } from "./job.schema";
 import { User } from "../user/user.schema";
 import { RegisterJobInput, ApplyJobInput } from "./job.input";
@@ -17,7 +17,7 @@ export class JobService {
     const companyExists = await this.userModel.findOne({ _id: input.company_id, type: "company" }).exec();
 
     if (!companyExists) {
-      throw new Error("Company not found");
+      throw new NotFoundException("Company not found");
     }
     return this.jobModel.create(input);
   }
