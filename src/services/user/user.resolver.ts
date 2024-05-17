@@ -11,9 +11,4 @@ export class UserResolver {
   async registerUser(@Args('input') input: RegisterUserInput) {
     return this.userService.registerUser(input);
   }
-
-  @Query(() => [User])
-  async users() {
-    return this.userService.find();
-  }
 }

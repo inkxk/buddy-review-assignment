@@ -6,12 +6,6 @@ import { UserService } from "./user.service";
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get()
-  async getAllUsers() {
-    const users = await this.userService.find();
-    return { users };
-  }
-
   @Post("/register")
   async registerUser(@Body() data: RegisterUserInput) {    
     const user = await this.userService.registerUser(data);

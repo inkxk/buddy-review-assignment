@@ -13,8 +13,4 @@ export class UserService {
   async registerUser(input: CreateQuery<RegisterUserInput>): Promise<User> {
     return this.userModel.create(input);
   }
-
-  async find(): Promise<User[]> {
-    return this.userModel.find().lean();
-  }
 }

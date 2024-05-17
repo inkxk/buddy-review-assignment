@@ -3,14 +3,14 @@ import * as mongoose from "mongoose";
 import { Document } from "mongoose";
 
 const applicantSchema = new mongoose.Schema({
-  applicant_id: { type: String, required: true },
+  applicant_id: { type: mongoose.Schema.ObjectId, required: true },
   application_status: { type: String },
 });
 
 export const JobSchema = new mongoose.Schema({
   title: { type: String, required: true, unique: true },
   description: { type: String, required: false },
-  company_id: { type: String, required: true },
+  company_id: { type: mongoose.Schema.ObjectId, required: true },
   applicants: { type: [applicantSchema], required: true },
   is_deleted: { type: Boolean, default: false }
 });

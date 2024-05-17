@@ -23,12 +23,23 @@ type Job {
 }
 
 type Query {
-  users: [Job!]!
+  userQueryJob(input: UserQueryJobInput!): [Job!]!
+  companyQueryApplicant(input: CloseJobInput!): [User!]!
+}
+
+input UserQueryJobInput {
+  title: String!
+}
+
+input CloseJobInput {
+  job_id: String!
 }
 
 type Mutation {
   registerUser(input: RegisterUserInput!): User!
   registerJob(input: RegisterJobInput!): Job!
+  applyJob(input: ApplyJobInput!): Job!
+  closeJob(input: CloseJobInput!): Job!
 }
 
 input RegisterUserInput {
@@ -42,4 +53,9 @@ input RegisterJobInput {
   title: String!
   description: String!
   company_id: String!
+}
+
+input ApplyJobInput {
+  job_id: String!
+  applicant_id: String!
 }

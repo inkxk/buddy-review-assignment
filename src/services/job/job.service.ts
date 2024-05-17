@@ -1,8 +1,19 @@
-import { Model, CreateQuery, UpdateQuery } from "mongoose";
-import { Injectable, Inject, NotFoundException, ConflictException } from "@nestjs/common";
+import { Model, CreateQuery, UpdateQuery, FilterQuery } from "mongoose";
+import {
+  Injectable,
+  Inject,
+  NotFoundException,
+  ConflictException,
+} from "@nestjs/common";
 import { Job } from "./job.schema";
 import { User } from "../user/user.schema";
-import { RegisterJobInput, ApplyJobInput } from "./job.input";
+import {
+  RegisterJobInput,
+  ApplyJobInput,
+  CloseJobInput,
+  UserQueryJobInput,
+  CompanyQueryApplicantInput,
+} from "./job.input";
 
 @Injectable()
 export class JobService {
@@ -28,7 +39,9 @@ export class JobService {
     const applicantExists = await this.userModel
       .findOne({ _id: input.applicant_id, type: "applicant" })
       .exec();
-    const jobExists = await this.jobModel.findOne({ _id: input.job_id, is_deleted: false }).exec();
+    const jobExists = await this.jobModel
+      .findOne({ _id: input.job_id, is_deleted: false })
+      .exec();
 
     if (!applicantExists || !jobExists) {
       throw new NotFoundException("Applicant or Job not found");
@@ -39,7 +52,7 @@ export class JobService {
       .findOne({
         _id: input.job_id,
         applicants: { $elemMatch: { applicant_id: input.applicant_id } },
-        is_deleted: false
+        is_deleted: false,
       })
       .exec();
 
@@ -56,8 +69,10 @@ export class JobService {
     );
   }
 
-  async closeJob(input: UpdateQuery<RegisterJobInput>): Promise<Job> {
-    const jobExists = await this.jobModel.findOne({ _id: input.job_id, is_deleted: false }).exec();
+  async closeJob(input: UpdateQuery<CloseJobInput>): Promise<Job> {
+    const jobExists = await this.jobModel
+      .findOne({ _id: input.job_id, is_deleted: false })
+      .exec();
 
     if (!jobExists) {
       throw new NotFoundException("Job not found");
@@ -66,13 +81,52 @@ export class JobService {
     return this.jobModel.findByIdAndUpdate(
       input.job_id,
       {
-        is_deleted: true
+        is_deleted: true,
       },
       { new: true },
     );
   }
 
-  async findAll(): Promise<Job[]> {
-    return this.jobModel.find();
+  async userQueryJob(input: FilterQuery<UserQueryJobInput>): Promise<Job[]> {
+    return this.jobModel.aggregate([
+      {
+        $match: {
+          is_deleted: false,
+          ...(input.title ? { title: input.title } : {}),
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "company_id",
+          foreignField: "_id",
+          as: "users",
+        },
+      },
+      { $unwind:"$users" }, 
+      {
+        $match: {
+          "users.type": "company",
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          title: 1,
+          description: 1,
+          company_name : "$users.name",
+        },
+      },
+    ]);
+  }
+
+  async companyQueryApplicant(
+    input: FilterQuery<CompanyQueryApplicantInput>,
+  ): Promise<Job[]> {
+    return this.jobModel.find({
+      is_deleted: false,
+      company_id: input.company_id,
+      ...(input.job_id ? { _id: input.job_id } : {}),
+    });
   }
 }

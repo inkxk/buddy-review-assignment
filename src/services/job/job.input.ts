@@ -22,7 +22,22 @@ export class RegisterJobInput {
 }
 
 @InputType()
-export class QueryJobInput {
+export class UserQueryJobInput {
+  @Field()
+  @IsString()
+  @IsOptional()
+  title: string;
+}
+
+@InputType()
+export class CompanyQueryApplicantInput {
+  @Field()
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(24)
+  @MaxLength(24)
+  company_id: string;
+
   @Field()
   @IsString()
   @IsOptional()

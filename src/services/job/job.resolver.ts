@@ -1,7 +1,13 @@
 import { Args, Mutation, Resolver, Query } from "@nestjs/graphql";
-import { RegisterJobInput } from "./job.input";
+import {
+  RegisterJobInput,
+  ApplyJobInput,
+  CloseJobInput,
+  UserQueryJobInput,
+} from "./job.input";
 import { JobService } from "./job.service";
 import { Job } from "./job.schema";
+import { User } from "../user/user.schema";
 
 @Resolver(() => Job)
 export class JobResolver {
@@ -13,17 +19,22 @@ export class JobResolver {
   }
 
   @Mutation(() => Job)
-  async applyJob(@Args("input") input: RegisterJobInput) {
+  async applyJob(@Args("input") input: ApplyJobInput) {
     return this.jobService.applyJob(input);
   }
 
   @Mutation(() => Job)
-  async closeJob(@Args("input") input: RegisterJobInput) {
+  async closeJob(@Args("input") input: CloseJobInput) {
     return this.jobService.closeJob(input);
   }
 
   @Query(() => [Job])
-  async users() {
-    return this.jobService.findAll();
+  async userQueryJob(@Args("input") input: UserQueryJobInput) {
+    return this.jobService.userQueryJob(input);
+  }
+
+  @Query(() => [User])
+  async companyQueryApplicant(@Args("input") input: CloseJobInput) {
+    return this.jobService.companyQueryApplicant(input);
   }
 }
