@@ -4,6 +4,7 @@ import {
   ApplyJobInput,
   CloseJobInput,
   UserQueryJobInput,
+  UpdateApplicantStatusInput,
 } from "./job.input";
 import { JobService } from "./job.service";
 import { Job } from "./job.schema";
@@ -26,6 +27,11 @@ export class JobResolver {
   @Mutation(() => Job)
   async closeJob(@Args("input") input: CloseJobInput) {
     return this.jobService.closeJob(input);
+  }
+
+  @Mutation(() => Job)
+  async updateApplicantStatus(@Args("input") input: UpdateApplicantStatusInput) {
+    return this.jobService.updateApplicantStatus(input);
   }
 
   @Query(() => [Job])

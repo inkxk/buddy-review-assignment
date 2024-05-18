@@ -4,7 +4,7 @@ import { Document } from "mongoose";
 
 const applicantSchema = new mongoose.Schema({
   applicant_id: { type: mongoose.Schema.ObjectId, required: true },
-  application_status: { type: String },
+  application_status: { type: Boolean, default : null },
 });
 
 export const JobSchema = new mongoose.Schema({
@@ -21,7 +21,7 @@ export class Applicant {
   applicant_id: string;
 
   @Field()
-  application_status: string;
+  application_status: boolean;
 }
 
 @ObjectType()

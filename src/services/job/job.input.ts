@@ -1,5 +1,5 @@
 import { Field, InputType } from "@nestjs/graphql";
-import { MaxLength, IsNotEmpty, IsOptional, IsString, MinLength } from "class-validator";
+import { MaxLength, IsNotEmpty, IsOptional, IsString, MinLength, IsBoolean } from "class-validator";
 
 @InputType()
 export class RegisterJobInput {
@@ -74,8 +74,8 @@ export class UpdateApplicantStatusInput {
 
   @Field()
   @IsNotEmpty()
-  @IsString()
-  application_status: string;
+  @IsBoolean()
+  application_status: boolean;
 }
 
 @InputType()

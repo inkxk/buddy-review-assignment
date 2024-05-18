@@ -1,5 +1,5 @@
 import { Body, Controller, Put, Post, Get, Query } from "@nestjs/common";
-import { RegisterJobInput, ApplyJobInput, CloseJobInput, UserQueryJobInput, CompanyQueryApplicantInput } from "./job.input";
+import { RegisterJobInput, ApplyJobInput, CloseJobInput, UserQueryJobInput, UpdateApplicantStatusInput, CompanyQueryApplicantInput } from "./job.input";
 import { JobService } from "./job.service";
 
 @Controller("/job")
@@ -29,6 +29,12 @@ export class JobController {
     const job = await this.jobService.applyJob(data);
     return { job };
   }
+
+  @Put("/update-applicant-status")
+  async updateApplicantStatus(@Body() data: UpdateApplicantStatusInput) {
+    const job = await this.jobService.updateApplicantStatus(data);
+    return { job };
+  }  
 
   @Put("/close")
   async closeJob(@Body() data: CloseJobInput) {

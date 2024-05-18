@@ -13,6 +13,7 @@ import {
   CloseJobInput,
   UserQueryJobInput,
   CompanyQueryApplicantInput,
+  UpdateApplicantStatusInput,
 } from "./job.input";
 
 @Injectable()
@@ -103,7 +104,7 @@ export class JobService {
           as: "users",
         },
       },
-      { $unwind:"$users" }, 
+      { $unwind: "$users" },
       {
         $match: {
           "users.type": "company",
@@ -114,7 +115,7 @@ export class JobService {
           _id: 1,
           title: 1,
           description: 1,
-          company_name : "$users.name",
+          company_name: "$users.name",
         },
       },
     ]);
@@ -128,5 +129,31 @@ export class JobService {
       company_id: input.company_id,
       ...(input.job_id ? { _id: input.job_id } : {}),
     });
+  }
+
+  async updateApplicantStatus(
+    input: UpdateQuery<UpdateApplicantStatusInput>,
+  ): Promise<Job> {
+    const alreadyApplied = await this.jobModel
+      .findOne({
+        _id: input.job_id,
+        applicants: { $elemMatch: { applicant_id: input.applicant_id } },
+        is_deleted: false,
+      })
+      .exec();
+
+    if (!alreadyApplied) {
+      throw new NotFoundException("Job or Applicant not found");
+    }
+
+    return this.jobModel.findOneAndUpdate(
+      {
+        _id: input.job_id,
+        applicants: { $elemMatch: { applicant_id: input.applicant_id } },
+        is_deleted: false,
+      },
+      { $set: { "applicants.$.application_status": input.application_status } },
+      { new: true },
+    );
   }
 }

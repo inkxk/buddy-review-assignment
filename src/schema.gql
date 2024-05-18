@@ -11,7 +11,7 @@ type User {
 
 type Applicant {
   applicant_id: String!
-  application_status: String!
+  application_status: Boolean!
 }
 
 type Job {
@@ -40,6 +40,7 @@ type Mutation {
   registerJob(input: RegisterJobInput!): Job!
   applyJob(input: ApplyJobInput!): Job!
   closeJob(input: CloseJobInput!): Job!
+  updateApplicantStatus(input: UpdateApplicantStatusInput!): Job!
 }
 
 input RegisterUserInput {
@@ -58,4 +59,10 @@ input RegisterJobInput {
 input ApplyJobInput {
   job_id: String!
   applicant_id: String!
+}
+
+input UpdateApplicantStatusInput {
+  job_id: String!
+  applicant_id: String!
+  application_status: Boolean!
 }
