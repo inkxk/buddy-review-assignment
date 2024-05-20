@@ -37,6 +37,7 @@ input CloseJobInput {
 
 type Mutation {
   registerUser(input: RegisterUserInput!): User!
+  loginUser(input: LoginUserInput!): User!
   registerJob(input: RegisterJobInput!): Job!
   applyJob(input: ApplyJobInput!): Job!
   closeJob(input: CloseJobInput!): Job!
@@ -48,6 +49,11 @@ input RegisterUserInput {
   email: String!
   password: String!
   type: String!
+}
+
+input LoginUserInput {
+  email: String!
+  password: String!
 }
 
 input RegisterJobInput {
